@@ -1,0 +1,236 @@
+ public function store(Request $request)
+    {
+
+        //dd($request->file('imagen'));
+        $ruta = $request->file('imagen');
+        //$nombreArchivo = uniqid() . $request->file('imagen')->getClientOriginalName();
+        //return $request->file('imagen');
+        //return $request->all();
+        Session::flash('mensaje', 'Registro guardado!');
+
+        //return redirect()->route('restaurante.index');
+
+        //validacion del formulario
+        $request->validate([
+
+            'inputName'=> 'required|max:50',
+            'inputAddress'=> 'required|max:50',
+            'inputPhone'=> 'required|max:10',
+            'inputHorario'=> 'required|max:50',
+            'inputOwner'=> 'required|max:50',
+            'inputRoute'=> 'required|max:50',
+            'inputRestaurantType'=> 'required|max:50',
+            'inputPlate'=> 'required|max:50',
+            'inputDescription'=> 'required|max:200',
+            'imagen.*' => 'required|image'
+        ]);
+        //return $request->file('imagen');
+
+        $urlImagenes = [];
+        if ($request->hasFile('imagen')) {
+
+            $imagenes = $request->file('imagen');
+
+                
+
+            //dd($imagenes);
+            
+            foreach ($imagenes as $imagen) {
+                $nombreArchivo = uniqid() . $imagen->getClientOriginalName();
+                $urlImagenes[]['url'] = $nombreArchivo;
+
+                //dd($urlImagenes) ;
+
+
+                //Conection to the api
+                $client = new Client([
+
+                    'base_uri' => 'http://127.0.0.1:8000/api/multimedia'
+                ]);
+
+
+                $client->request('POST', 'http://127.0.0.1:8000/api/multimedia/registrar', [
+                    'multipart' => [
+                        [
+                            'name' => 'fk_id_res3',
+                            'contents' => '46'
+                        ],
+                        [
+                            'name' => 'fk_id_plato2',
+                            'contents' => '1'
+                        ],
+                        [
+                            'name' => 'link_video',
+                            'contents' => '6'
+                        ],
+                   // upload images to the api 
+                        [
+                            'name' => 'link_foto', // name value requires by endpoint
+                            'contents' => fopen($imagen, 'r'),
+                            'filename' => $nombreArchivo,
+                            //'headers' => array('Content-Type' => mime_content_type($ruta))
+                        ],
+                    ]
+                ]);
+            }
+            //return $urlImagenes;
+        }
+
+
+        // $client = new Client([
+
+        //     'base_uri' => 'http://127.0.0.1:8000/api/multimedia'
+        // ]);
+
+
+        // $client->request('POST', 'http://127.0.0.1:8000/api/multimedia/registrar', [
+        //     'multipart' => [
+        //         [
+        //             'name' => 'fk_id_res3',
+        //             'contents' => '46'
+        //         ],
+        //         [
+        //             'name' => 'fk_id_plato2',
+        //             'contents' => '1'
+        //         ],
+        //         [
+        //             'name' => 'link_video',
+        //             'contents' => '6'
+        //         ],
+
+
+        //         [
+        //             'name' => 'link_foto', // name value requires by endpoint
+        //             'contents' => fopen($request->file('imagen'), 'r'),
+        //             'filename' => '$nombreArchivo',
+        //             //'headers' => array('Content-Type' => mime_content_type($ruta))
+        //         ],
+        //     ]
+        // ]);
+
+        //METODO POST
+
+
+        // $restaurante = Http::withBody(
+        //      base64_encode($request->file)
+        // )->post('http://127.0.0.1:8000/api/multimedia/registest');
+
+
+        //$restaurante->nombre = $request->nombre;
+        //registrar los datos en la base de datos
+        // $restaurante = new Restaurante();
+        //   $restaurante->nombre = $request->inputName;
+        // $restaurante->direccion = $request->inputAddress;
+        //$restaurante->telefono = $request->inputPhone;
+        //$restaurante->propietario = $request->inputOwner;
+        //$restaurante->save();
+        //$restaurante = Restaurante::create($request->only($restaurante));
+        Session::flash('mensaje', 'Registro guardado!');
+
+        return redirect()->route('restaurante.index');
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    ------------------------------------------
+
+
+    # code...
+            foreach ($imagenesRestaurant as $itemRestaurant) {
+
+                
+                $nombreArchivoRestaurant = uniqid() . $itemRestaurant->getClientOriginalName();
+                $urlImagenes[]['url'] = $nombreArchivoRestaurant;
+                //IMAGEN PLATE 
+                //print('En restaurante : '.$contador);
+                foreach ($imagenesPlate as $itemPlate) {
+                  
+                    # code..
+                    //$contador++;
+                    //print('En plato:'.$contador);
+                    $nombreArchivoPlate = uniqid() . $itemPlate->getClientOriginalName();
+                    $urlImagesPlate[]['url'] = $nombreArchivoPlate;
+
+                    //dd($urlImagenes) ;
+
+                    
+                    //Conection to the api
+                    $client = new Client([
+
+                        'base_uri' => 'http://127.0.0.1:8000/api/restaurante'
+                    ]);
+
+
+                    $client->request('POST', 'http://127.0.0.1:8000/api/restaurante/registrar', [
+                        'multipart' => [
+                            [
+                                'name' => 'nombre_restaurante',
+                                'contents' => $nameRestaurant
+                            ],
+                            [
+                                'name' => 'direccion',
+                                'contents' => $inputAddress
+                            ],
+                            [
+                                'name' => 'telefono',
+                                'contents' => $inputPhone
+                            ],
+                            [
+                                'name' => 'horario_atencion',
+                                'contents' => $inputHorario
+                            ],
+                            [
+                                'name' => 'fk_id_tipo_res',
+                                'contents' => '1'
+                            ],
+                            [
+                                'name' => 'nombre_ruta',
+                                'contents' => $inputNameRoute
+                            ],
+                            [
+                                'name' => 'link_ruta',
+                                'contents' => $inputRoute
+                            ],
+                            [
+                                'name' => 'nombre_plato',
+                                'contents' => $inputPlate
+                            ],
+                            [
+                                'name' => 'descripcion',
+                                'contents' => $inputDescription
+                            ],
+                            [
+                                'name' => 'link_video',
+                                'contents' => '6'
+                            ],
+                            // upload images to the api 
+                            [
+                                'name' => 'link_foto_restaurante', // name value requires by endpoint
+                                'contents' => fopen($itemRestaurant, 'r'),
+                                'filename' => $nombreArchivoRestaurant,
+                                //'headers' => array('Content-Type' => mime_content_type($ruta))
+                            ],
+                            [
+                                
+                                'name' => 'link_foto_plato', // name value requires by endpoint
+                                'contents' => fopen($itemPlate, 'r'),
+                                'filename' => $nombreArchivoPlate,
+                                //'headers' => array('Content-Type' => mime_content_type($ruta))
+                            ],
+                        ]
+                    ]);
+                }
+            }
+            

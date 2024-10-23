@@ -1,0 +1,48 @@
+.button {
+    background: #e7e7e7; 
+    color: rgb(0, 0, 0); 
+    border-radius: 12px;
+    padding: 10px 8px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    
+  
+}
+.button:hover {
+    background-color: #0ea3b6f9; /* Green */
+    color: white;
+  }
+  
+.buttonLogout{
+
+    color: white;
+    
+
+}
+
+.caja{
+    float: left;
+    width: calc(30% - 20px);
+   
+    background: white;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 20px;
+  }
+  
+
+  
+  .caja:nth-child(2n + 1){
+    padding-top: 10px;
+    background: white;
+  }
+  .logoResponsive {
+    margin: auto;
+    display: block;
+    width: 23%;
+    max-width: 30px;
+    height: auto;
+    border-radius: 8px;
+}
